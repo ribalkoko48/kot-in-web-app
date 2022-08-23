@@ -20,8 +20,8 @@ tabGroup?.setDefaultTab({
 
 const tradeAndServiceTab =  tabGroup?.addTab({
     title: "T&S",
-    src: "http://localhost:4002/",
-    // src: "https://trade-and-service.test-middle.megafon.ru:2047/",
+    // src: "http://localhost:4002/",
+    src: "https://trade-and-service.test-middle.megafon.ru:2047/",
     webviewAttributes: {
         preload: 'mypreload.js',
 
