@@ -3,10 +3,66 @@
   "version": "0.0.1",
   "description": "Web app from MegaFon-Retail",
   "main": "main.js",
+  "author": "MegaFon-Retail",
   "scripts": {
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://cicd-git.megafon.ru/middle/orion/electron.git"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.64",
+    "@electron-forge/maker-deb": "^6.0.0-beta.64",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
+    "@electron-forge/maker-zip": "^6.0.0-beta.64",
+    "@electron-forge/publisher-nucleus": "^6.0.0-beta.65",
     "electron": "20.0.3"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "electron_test_app"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-nucleus",
+          "config": {
+            "host": "http://127.0.0.1:8888",
+            "appId": "1",
+            "channelId": "849218fbd8ef6e881e0b9d65015494b0",
+            "token": "0d172215ee7fded95c0811d9dd87050f"
+          }
+        }
+      ]
+    }
   }
 }
+

@@ -43,7 +43,7 @@ tabGroup?.addTab({
 });
 
 // DevTools
-tradeAndServiceTab.on("webview-ready", t => t.webview.openDevTools());
+// tradeAndServiceTab.on("webview-ready", t => t.webview.openDevTools());
 
 const tab1CListener = async () => {
     const tradeAndServiceStore = await window.versions.ping();
