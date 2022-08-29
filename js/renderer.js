@@ -46,7 +46,7 @@ tabGroup?.addTab({
 tradeAndServiceTab.on("webview-ready", t => t.webview.openDevTools());
 
 const tab1CListener = async () => {
-    const tradeAndServiceStore = await window.versions.ping()
+    const tradeAndServiceStore = await window.versions.ping();
 
     if (tradeAndServiceStore && tradeAndServiceStore?.id !== STORE_ID) {
         if (TAB_1C) {

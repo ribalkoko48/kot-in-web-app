@@ -1,4 +1,4 @@
-const {ipcRenderer} = require('electron')
+const {ipcRenderer, contextBridge} = require('electron')
 
 const waitElement = (selector, delay) => new Promise((resolve) => {
     let waitTime = delay || 5000;
@@ -17,6 +17,10 @@ const waitElement = (selector, delay) => new Promise((resolve) => {
         waitTime -= 100;
     }, 100);
 });
+
+contextBridge.exposeInMainWorld('versions', {
+    ping: () => ipcRenderer.invoke('ping'),
+})
 
 window.addEventListener("DOMContentLoaded", () => {
     const startListener = async () => {
