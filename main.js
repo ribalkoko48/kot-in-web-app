@@ -118,7 +118,7 @@ function createWindow () {
       enableRemoteModule: true,*/
       webviewTag: true,
       // contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'js/preload.js')
     },
     frame: false
   })

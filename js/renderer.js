@@ -23,7 +23,7 @@ const tradeAndServiceTab =  tabGroup?.addTab({
     // src: "http://localhost:4002/",
     src: "https://trade-and-service.test-middle.megafon.ru:2047/",
     webviewAttributes: {
-        preload: 'mypreload.js',
+        preload: 'js/trade-and-service/preload.js',
 
         /*  plugins: true,
           webSecurity: false,
@@ -33,6 +33,12 @@ const tradeAndServiceTab =  tabGroup?.addTab({
           nodeIntegrationInWorker: true*/
     },
     active: true,
+    closable: false,
+});
+
+tabGroup?.addTab({
+    title: "CCM Portal",
+    src: "https://ccmp.megafon.ru/",
     closable: false,
 });
 
