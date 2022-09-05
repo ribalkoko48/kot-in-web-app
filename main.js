@@ -1,32 +1,19 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, ipcMain, remote, ipcRenderer, Menu} = require('electron')
+const {app, BrowserWindow, ipcMain, Menu} = require('electron')
 const path = require('path')
 
+let isPageInMaxSize = false;
 let selectedStore = null;
 
-const isMac = process.platform === 'darwin'
+// const isMac = process.platform === 'darwin'
 
 const template = [
   // { role: 'appMenu' }
-  ...(isMac ? [{
-    label: app.name,
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide' },
-      { type: 'separator' },
-      { role: 'quit' }
-    ]
-  }] : []),
   // { role: 'fileMenu' }
   {
     label: 'File',
     submenu: [
-      isMac ? { role: 'close' } : { role: 'quit' }
+      { role: 'quit' }
     ]
   },
   // { role: 'editMenu' }
@@ -39,23 +26,9 @@ const template = [
       { role: 'cut' },
       { role: 'copy' },
       { role: 'paste' },
-      ...(isMac ? [
-        { role: 'pasteAndMatchStyle' },
-        { role: 'delete' },
-        { role: 'selectAll' },
-        { type: 'separator' },
-        {
-          label: 'Speech',
-          submenu: [
-            { role: 'startSpeaking' },
-            { role: 'stopSpeaking' }
-          ]
-        }
-      ] : [
-        { role: 'delete' },
-        { type: 'separator' },
-        { role: 'selectAll' }
-      ])
+      { role: 'delete' },
+      { type: 'separator' },
+      { role: 'selectAll' }
     ]
   },
   // { role: 'viewMenu' }
@@ -79,14 +52,7 @@ const template = [
     submenu: [
       { role: 'minimize' },
       { role: 'zoom' },
-      ...(isMac ? [
-        { type: 'separator' },
-        { role: 'front' },
-        { type: 'separator' },
-        { role: 'window' }
-      ] : [
-        { role: 'close' }
-      ])
+      { role: 'close' }
     ]
   },
   {
@@ -105,9 +71,7 @@ const template = [
 
 const menu = Menu.buildFromTemplate(template)
 
-
-
-function createWindow () {
+const createWindow = async () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1200,
@@ -123,7 +87,7 @@ function createWindow () {
     frame: false
   })
   ipcMain.on(`display-app-menu`, function(e, args) {
-    if (isWindows && mainWindow) {
+    if (mainWindow) {
       menu.popup({
         window: mainWindow,
         x: args.x,
@@ -131,28 +95,29 @@ function createWindow () {
       });
     }
   });
-  let isMax = false;
-  ipcMain.handle('ping', () => selectedStore)
+
+  ipcMain.handle('ping', () => selectedStore);
+
+  ipcMain.handle('from_t&s', (event, store) => mainWindow.webContents.send('from_t&s2', store))
 
   // menu
   ipcMain.handle('getCurrentWindow', () => mainWindow.getCurrentWindow())
   ipcMain.handle('openMenu', () => menu.popup())
   ipcMain.handle('minimizeWindow', () => mainWindow.minimize())
   ipcMain.handle('maxUnmaxWindow', () => {
-    if (isMax) {
-      isMax = false;
+    if (isPageInMaxSize) {
+      isPageInMaxSize = false;
       mainWindow.unmaximize();
     } else {
-      isMax = true;
+      isPageInMaxSize = true;
       mainWindow.maximize();
     }
   })
-  ipcMain.handle('isMaximizable', () => mainWindow.isMaximizable)
   ipcMain.handle('closeWindow', () => mainWindow.close())
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
- // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -180,8 +145,3 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-ipcMain.on('t&s -> main: store', (event, innerStore) => {
-  selectedStore = innerStore;
-  event.reply('main -> t&s', 'Сохранили салон');
-});

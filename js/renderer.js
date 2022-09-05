@@ -5,12 +5,8 @@
 // selectively enable features needed in the rendering
 // process.
 
-let STORE_ID = null;
 let TAB_1C = null;
-
 const tabGroup = document.querySelector("tab-group");
-
-window.tabGroup = tabGroup;
 
 tabGroup?.setDefaultTab({
     title: "Яндекс",
@@ -18,10 +14,31 @@ tabGroup?.setDefaultTab({
     active: true
 });
 
+const listener = (data) => {
+    console.log('listener', data)
+
+    if (TAB_1C) {
+        TAB_1C.closable = true;
+        TAB_1C.close();
+    }
+
+    TAB_1C = tabGroup.addTab({
+        title: "1C",
+        src: 'http://hqpv-1ctester/Terminal_Reliz/ru_RU/',
+        webviewAttributes: {
+            preload: 'js/retail1C/preload.js',
+        },
+        active: true,
+        closable: false,
+    })
+}
+
+window.preloadTabGroup.setPreloadTabGroup(listener);
+
 const tradeAndServiceTab =  tabGroup?.addTab({
     title: "T&S",
-    // src: "http://localhost:4002/",
-    src: "https://trade-and-service.test-middle.megafon.ru:2047/",
+    src: "http://localhost:4002/",
+    // src: "https://trade-and-service.test-middle.megafon.ru:2047/",
     webviewAttributes: {
         preload: 'js/trade-and-service/preload.js',
 
@@ -36,40 +53,19 @@ const tradeAndServiceTab =  tabGroup?.addTab({
     closable: false,
 });
 
-tabGroup?.addTab({
+const ccmpTab = tabGroup?.addTab({
     title: "CCM Portal",
     src: "https://ccmp.megafon.ru/",
     closable: false,
 });
 
+// ccmpTab.on("webview-ready", t => t.webview.openDevTools());
+
+
 // DevTools
 // tradeAndServiceTab.on("webview-ready", t => t.webview.openDevTools());
 
-const tab1CListener = async () => {
-    const tradeAndServiceStore = await window.versions.ping();
 
-    if (tradeAndServiceStore && tradeAndServiceStore?.id !== STORE_ID) {
-        if (TAB_1C) {
-            TAB_1C.closable = true;
-            TAB_1C.close();
-        }
-
-        STORE_ID = tradeAndServiceStore?.id || null;
-        TAB_1C = tabGroup.addTab({
-            title: "1C",
-            src: 'http://hqpv-1ctester/Terminal_Reliz/ru_RU/',
-            active: true,
-            closable: false,
-        })
-        tab1CListener();
-    } else {
-        setTimeout(() => {
-            tab1CListener();
-        }, 500)
-    }
-}
-
-tab1CListener();
 
 // menu
 window.addEventListener("DOMContentLoaded", () => {
@@ -78,9 +74,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const maxUnmaxButton = document.getElementById("max-unmax-btn");
     const closeButton = document.getElementById("close-btn");
 
-    menuButton.addEventListener("click", e => {
+    menuButton.addEventListener("click", async (e) => {
         // Opens menu at (x,y) coordinates of mouse click on the hamburger icon.
-        window.menu.openMenu(e.x, e.y);
+        await window.menu.openMenu(e.x, e.y);
     });
 
     minimizeButton.addEventListener("click", async () => {
@@ -90,7 +86,7 @@ window.addEventListener("DOMContentLoaded", () => {
     maxUnmaxButton.addEventListener("click", e => {
         const icon = maxUnmaxButton.querySelector("i.far");
 
-        window.menu.maxUnmaxWindow(window.menu.isMaximizable);
+        window.menu.maxUnmaxWindow();
 
         // Change the middle maximize-unmaximize icons.
         if (window.menu.isMaximizable) {
