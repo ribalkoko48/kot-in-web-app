@@ -10,10 +10,6 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://cicd-git.megafon.ru/middle/orion/electron.git"
-  },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.64",
     "@electron-forge/maker-deb": "^6.0.0-beta.64",
