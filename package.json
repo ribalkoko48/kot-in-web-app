@@ -1,9 +1,9 @@
 {
-  "name": "trade-and-service-electron",
+  "name": "kot-inc-web-app",
   "version": "0.0.1",
-  "description": "Web app from MegaFon-Retail",
+  "description": "Web app from electron",
   "main": "main.js",
-  "author": "MegaFon-Retail",
+  "author": "electron",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
