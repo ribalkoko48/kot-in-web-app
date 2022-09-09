@@ -5,7 +5,7 @@
 // selectively enable features needed in the rendering
 // process.
 
-let TAB_1C = null;
+let TABS = {};
 const tabGroup = document.querySelector("tab-group");
 
 tabGroup?.setDefaultTab({
@@ -17,55 +17,35 @@ tabGroup?.setDefaultTab({
 const listener = (data) => {
     console.log('listener', data)
 
-    if (TAB_1C) {
-        TAB_1C.closable = true;
-        TAB_1C.close();
+    if (TABS[data.title]) {
+        TABS[data.title].closable = true;
+        TABS[data.title].close();
     }
 
-    TAB_1C = tabGroup.addTab({
-        title: "1C",
-        src: 'http://hqpv-1ctester/Terminal_Reliz/ru_RU/',
-        webviewAttributes: {
-            preload: 'js/retail1C/preload.js',
-        },
+    TABS[data.title] = tabGroup.addTab({
+        title: data.title,
+        src: data.url,
         active: true,
-        closable: false,
+        closable: true,
     })
 }
 
-window.preloadTabGroup.setPreloadTabGroup(listener);
+window.preloadTabGroup.setListener(listener);
 
-const tradeAndServiceTab =  tabGroup?.addTab({
-    title: "T&S",
-    src: "http://localhost:4002/",
-    // src: "https://trade-and-service.test-middle.megafon.ru:2047/",
+const mainPage =  tabGroup?.addTab({
+    title: "Kot.inc",
+    src: "https://ribalkoko48.github.io/",
     webviewAttributes: {
-        preload: 'js/trade-and-service/preload.js',
-
-        /*  plugins: true,
-          webSecurity: false,
-          enableRemoteModule: true,
-          contextIsolation: false,
-          nodeIntegration: true,
-          nodeIntegrationInWorker: true*/
+        preload: 'js/mainPage/preload.js',
     },
     active: true,
     closable: false,
 });
 
-const ccmpTab = tabGroup?.addTab({
-    title: "CCM Portal",
-    src: "https://ccmp.megafon.ru/",
-    closable: false,
-});
-
-// ccmpTab.on("webview-ready", t => t.webview.openDevTools());
-
+mainPage.on("webview-ready", t => t.webview.openDevTools());
 
 // DevTools
 // tradeAndServiceTab.on("webview-ready", t => t.webview.openDevTools());
-
-
 
 // menu
 window.addEventListener("DOMContentLoaded", () => {

@@ -2,8 +2,7 @@
 // It has the same sandbox as a Chrome extension.
 const { ipcRenderer, contextBridge} = require('electron')
 
-let openTabListener = null;
-
+// menu
 contextBridge.exposeInMainWorld('menu', {
   getCurrentWindow: () => ipcRenderer.invoke('getCurrentWindow'),
   openMenu: () => ipcRenderer.invoke('openMenu'),
@@ -13,8 +12,13 @@ contextBridge.exposeInMainWorld('menu', {
   closeWindow: () => ipcRenderer.invoke('closeWindow'),
 })
 
+// openTab
+let openTabListener = null;
+
 contextBridge.exposeInMainWorld('preloadTabGroup', {
-  setPreloadTabGroup: (innerListener) => openTabListener = innerListener
+  setListener: (innerListener) => openTabListener = innerListener
 })
 
 ipcRenderer.on('from_t&s2', (event, args) => openTabListener(args))
+
+ipcRenderer.on('newTab', (event, newTabData) => openTabListener(newTabData))

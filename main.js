@@ -77,11 +77,7 @@ const createWindow = async () => {
     width: 1200,
     height: 800,
     webPreferences: {
-  /*    plugins: true,
-      webSecurity: false,
-      enableRemoteModule: true,*/
       webviewTag: true,
-      // contextIsolation: false,
       preload: path.join(__dirname, 'js/preload.js')
     },
     frame: false
@@ -99,6 +95,8 @@ const createWindow = async () => {
   ipcMain.handle('ping', () => selectedStore);
 
   ipcMain.handle('from_t&s', (event, store) => mainWindow.webContents.send('from_t&s2', store))
+
+  ipcMain.handle('openNewTab', (event, tabData) => mainWindow.webContents.send('newTab', tabData))
 
   // menu
   ipcMain.handle('getCurrentWindow', () => mainWindow.getCurrentWindow())
